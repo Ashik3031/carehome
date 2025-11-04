@@ -17,32 +17,51 @@ const navigation = [
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const isHomePage = pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+
+      setIsScrolled(currentScrollY > 20);
+
+      if (currentScrollY < lastScrollY || currentScrollY < 100) {
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false);
+        setMobileMenuOpen(false);
+      }
+
+      setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      } ${
         isScrolled
           ? 'bg-background/95 backdrop-blur-md border-b border-border shadow-sm'
           : 'bg-transparent'
       }`}
     >
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-xl lg:text-2xl font-bold text-gradient">
-              CareToHome
-            </span>
+      <nav className="container mx-auto px-6 sm:px-8 lg:px-12">
+        {/* Increased heights here */}
+        <div className="flex items-center justify-between h-20 lg:h-24">
+          <Link href="/" className="flex items-center shrink-0">
+            <img
+              src="https://res.cloudinary.com/dugtxybef/image/upload/v1761570828/care_your_home.-removebg_yuo5mf.png"
+              alt="CareToHome"
+              className="h-16 lg:h-24 w-auto"
+            />
           </Link>
 
           <div className="hidden lg:flex items-center space-x-1">
@@ -52,10 +71,18 @@ export function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 py-2 rounded-full text-sm font-normal transition-colors ${
                     isActive
-                      ? 'text-primary bg-primary/10'
-                      : 'text-foreground/70 hover:text-foreground hover:bg-accent'
+                      ? isScrolled
+                        ? 'text-primary bg-primary/10'
+                        : isHomePage
+                          ? 'text-white bg-white/20'
+                          : 'text-primary bg-primary/10'
+                      : isScrolled
+                        ? 'text-foreground/80 hover:text-foreground hover:bg-accent'
+                        : isHomePage
+                          ? 'text-white/90 hover:text-white hover:bg-white/10'
+                          : 'text-foreground/80 hover:text-foreground hover:bg-accent'
                   }`}
                 >
                   {item.name}
@@ -68,7 +95,13 @@ export function Header() {
             <Button
               asChild
               variant="ghost"
-              className="font-medium"
+              className={`font-normal rounded-full ${
+                isScrolled
+                  ? 'text-foreground hover:bg-accent'
+                  : isHomePage
+                    ? 'text-white hover:bg-white/10 hover:text-white'
+                    : 'text-foreground hover:bg-accent'
+              }`}
             >
               <a
                 href="https://wa.me/919000000000?text=Hi%2C%20I%27m%20interested%20in%20CareToHome%20plans."
@@ -78,21 +111,36 @@ export function Header() {
                 Talk to Admin
               </a>
             </Button>
-            <Button asChild className="bg-primary hover:bg-primary/90 font-semibold">
+            <Button
+              asChild
+              className={`font-normal rounded-full ${
+                isScrolled
+                  ? 'bg-primary text-foreground hover:bg-primary/90'
+                  : isHomePage
+                    ? 'bg-white text-foreground hover:bg-white/90'
+                    : 'bg-primary text-foreground hover:bg-primary/90'
+              }`}
+            >
               <Link href="/contact">Get a Quote</Link>
             </Button>
           </div>
 
           <button
             type="button"
-            className="lg:hidden p-2 rounded-lg hover:bg-accent transition-colors"
+            className={`lg:hidden p-2 rounded-lg transition-colors ${
+              isScrolled
+                ? 'hover:bg-foreground/10'
+                : isHomePage
+                  ? 'hover:bg-white/10'
+                  : 'hover:bg-foreground/10'
+            }`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
+              <X className={`h-6 w-6 ${isScrolled ? 'text-foreground' : isHomePage ? 'text-white' : 'text-foreground'}`} />
             ) : (
-              <Menu className="h-6 w-6" />
+              <Menu className={`h-6 w-6 ${isScrolled ? 'text-foreground' : isHomePage ? 'text-white' : 'text-foreground'}`} />
             )}
           </button>
         </div>
@@ -107,7 +155,7 @@ export function Header() {
             transition={{ duration: 0.2 }}
             className="lg:hidden bg-background border-b border-border"
           >
-            <div className="container mx-auto px-4 py-4 space-y-2">
+            <div className="container mx-auto px-6 py-4 space-y-2">
               {navigation.map((item) => {
                 const isActive = pathname === item.href;
                 return (
@@ -115,10 +163,10 @@ export function Header() {
                     key={item.name}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    className={`block px-4 py-3 rounded-lg text-sm font-normal transition-colors ${
                       isActive
                         ? 'text-primary bg-primary/10'
-                        : 'text-foreground/70 hover:text-foreground hover:bg-accent'
+                        : 'text-foreground/80 hover:text-foreground hover:bg-accent'
                     }`}
                   >
                     {item.name}
@@ -129,7 +177,7 @@ export function Header() {
                 <Button
                   asChild
                   variant="outline"
-                  className="w-full font-medium"
+                  className="w-full font-normal rounded-full"
                 >
                   <a
                     href="https://wa.me/919000000000?text=Hi%2C%20I%27m%20interested%20in%20CareToHome%20plans."
@@ -141,7 +189,7 @@ export function Header() {
                 </Button>
                 <Button
                   asChild
-                  className="w-full bg-primary hover:bg-primary/90 font-semibold"
+                  className="w-full bg-primary hover:bg-primary/90 font-normal rounded-full text-foreground"
                 >
                   <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
                     Get a Quote
@@ -155,3 +203,4 @@ export function Header() {
     </header>
   );
 }
+ 

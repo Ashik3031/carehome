@@ -19,20 +19,24 @@ export function Footer() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           <div className="space-y-4">
-            <h3 className="text-xl font-bold text-gradient">CareToHome</h3>
+            <img
+              src="https://res.cloudinary.com/dugtxybef/image/upload/v1761570828/care_your_home.-removebg_yuo5mf.png"
+              alt="CareToHome"
+              className="h-16 w-auto"
+            />
             <p className="text-sm text-white/70 leading-relaxed">
               Remote home care, handled. Monthly cleaning, maintenance & inspections for homeowners in Kozhikode.
             </p>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Company</h4>
+            <h4 className="font-semibold mb-4 text-primary">Company</h4>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/70 hover:text-white transition-colors"
+                    className="text-sm text-white/70 hover:text-primary transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -42,13 +46,13 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Services</h4>
+            <h4 className="font-semibold mb-4 text-primary">Services</h4>
             <ul className="space-y-2">
               {footerLinks.services.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/70 hover:text-white transition-colors"
+                    className="text-sm text-white/70 hover:text-primary transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -58,34 +62,34 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Get in Touch</h4>
+            <h4 className="font-semibold mb-4 text-primary">Get in Touch</h4>
             <ul className="space-y-3">
               <li>
                 <a
                   href="https://wa.me/919000000000"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center space-x-2 text-sm text-white/70 hover:text-white transition-colors"
+                  className="flex items-center space-x-2 text-sm text-white/70 hover:text-primary transition-colors group"
                 >
-                  <MessageCircle className="h-4 w-4" />
+                  <MessageCircle className="h-4 w-4 group-hover:text-primary" />
                   <span>WhatsApp</span>
                 </a>
               </li>
               <li>
                 <a
                   href="tel:+919000000000"
-                  className="flex items-center space-x-2 text-sm text-white/70 hover:text-white transition-colors"
+                  className="flex items-center space-x-2 text-sm text-white/70 hover:text-primary transition-colors group"
                 >
-                  <Phone className="h-4 w-4" />
+                  <Phone className="h-4 w-4 group-hover:text-primary" />
                   <span>+91 9000000000</span>
                 </a>
               </li>
               <li>
                 <a
                   href="mailto:hello@example.com"
-                  className="flex items-center space-x-2 text-sm text-white/70 hover:text-white transition-colors"
+                  className="flex items-center space-x-2 text-sm text-white/70 hover:text-primary transition-colors group"
                 >
-                  <Mail className="h-4 w-4" />
+                  <Mail className="h-4 w-4 group-hover:text-primary" />
                   <span>hello@example.com</span>
                 </a>
               </li>
